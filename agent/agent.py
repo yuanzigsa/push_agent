@@ -33,6 +33,7 @@ class Agent:
         self.collect_event = threading.Event()
         self.sync_event = threading.Event()
         self.push_event = threading.Event()
+        self.total = int(self.push_interval / self.collect_interval)
 
     def start(self):
         threading.Thread(target=self.collect_task, daemon=True).start()
@@ -51,10 +52,10 @@ class Agent:
 
             with self.shared_info.lock:
                 self.shared_info.info.append(info)
-            total = int(self.push_interval/self.collect_interval)
+
             if info:
                 self.logger.info("流量信息采集成功")
-                self.logger.info(f"第【{len(self.shared_info.info)}/{total}】轮采集完成")
+                self.logger.info(f"第【{len(self.shared_info.info)}/{self.total}】轮采集完成")
             else:
                 self.logger.error("第【{len(self.shared_info.info)}/{total}】轮采集失败")
 
@@ -82,13 +83,14 @@ class Agent:
         while True:
             with self.shared_info.lock:
                 info = self.shared_info.info
-                success = self.server_sync.push(info, self.shared_info.machine_config, self.shared_info.global_config)
+                success = self.server_sync.push(info, self.shared_info.machine_config, self.shared_info.global_config, self.total)
                 if success:
                     self.logger.info("流量信息推送成功")
                     # 重置采集数据变量
                     self.shared_info.info = []
                 else:
-                    self.logger.error("流量信息推送失败")
+                    if success is False:
+                        self.logger.error("流量信息推送失败")
             if not self.push_event.is_set():
                 self.push_event.set()  # 第一次任务完成后设置事件
             time.sleep(self.push_interval)
