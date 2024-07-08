@@ -31,7 +31,7 @@ if __name__ == "__main__":
     logger = setup_logger()
     logger.info(banner)
     # 数据初始化
-    sync_interval = 5
+    sync_interval = 3
     collect_interval = 3
     push_interval = 9
 
