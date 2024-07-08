@@ -1,16 +1,42 @@
-# 这是一个示例 Python 脚本。
+# @Author  : yuanzi
+# @Time    : 2024/7/7 9:13
+# Copyright (c) <yuanzigsa@gmail.com>
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+import os
+import time
+from agent.agent import Agent
+from agent.monitor import Monitor
+from agent.utils import setup_logger
 
+banner = f"""启动PushAgent程序...\n
+ ███████                  ██          ██                                ██  
+░██░░░░██                ░██         ████     █████                    ░██  
+░██   ░██ ██   ██  ██████░██        ██░░██   ██░░░██  █████  ███████  ██████
+░███████ ░██  ░██ ██░░░░ ░██████   ██  ░░██ ░██  ░██ ██░░░██░░██░░░██░░░██░ 
+░██░░░░  ░██  ░██░░█████ ░██░░░██ ██████████░░██████░███████ ░██  ░██  ░██  
+░██      ░██  ░██ ░░░░░██░██  ░██░██░░░░░░██ ░░░░░██░██░░░░  ░██  ░██  ░██  
+░██      ░░██████ ██████ ░██  ░██░██     ░██  █████ ░░██████ ███  ░██  ░░██ 
+░░        ░░░░░░ ░░░░░░  ░░   ░░ ░░      ░░  ░░░░░   ░░░░░░ ░░░   ░░    ░░  
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+【程序版本】：v1.0   
+【更新时间】：2024/7/7
+【系统信息】：{Monitor.get_system_info()}  
 
+【内存总量】：{Monitor.get_total_memory_gb()}GB
+【当前路径】：{os.getcwd()}
+"""
+# 【CPU 信息】：{Monitor.get_cpu_info()[0]}  {Monitor.get_cpu_info()[1]} cores
 
-# 按装订区域中的绿色按钮以运行脚本。
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if __name__ == "__main__":
+    logger = setup_logger()
+    logger.info(banner)
+    # 数据初始化
+    sync_interval = 5
+    collect_interval = 3
+    push_interval = 9
 
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    agent = Agent(sync_interval, collect_interval, push_interval)
+    agent.start()
+
+    while True:
+        time.sleep(1)
