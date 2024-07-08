@@ -40,7 +40,6 @@ class ServerSync:
 
             current_time = self.get_time()
             status = "unknown"
-            print(info[-1][ifname]['uptime'])
             if current_time['timestamp'] - info[-1][ifname]['uptime'] <= 300:
                 status = "normal"
             # 初始信息上报
@@ -82,17 +81,16 @@ class ServerSync:
         # server_url = global_config['server_url']
 
         # 推送历史
+        try:
+            response = requests.post(self.history_api, data=json.dumps(info), headers=self.headers)
 
-        if len(info) >= 3:
-            try:
-                response = requests.post(self.history_api, data=json.dumps(info), headers=self.headers)
-                if response.status_code == 200:
-                    if response.json()['error'] == '':
-                        return True
-            except requests.RequestException as e:
-                return False
-        else:
-            self.logger.info("没有新的流量信息需要同步")
+            if response.status_code == 200:
+                if response.json()['error'] == '':
+                    return True
+        except requests.RequestException as e:
+            return False
+        # else:
+        #     self.logger.info("没有新的流量信息需要同步")
 
     @staticmethod
     def get_time():
