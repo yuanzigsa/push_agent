@@ -29,6 +29,7 @@ class ServerSync:
             self.logger.error(f"{e}")
 
     def sync(self, info, machine_config):
+        print(f"info:{info}")
         if machine_config is None:
             machine_config = self.machine_config
             print(machine_config)
