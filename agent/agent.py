@@ -37,11 +37,9 @@ class Agent:
 
     def start(self):
         threading.Thread(target=self.collect_task, daemon=True).start()
-        self.collect_event.wait()  # 等待 collect_task 完成第一次任务
         self.logger.info("流量采集线程已启动！")
         # threading.Thread(target=self.sync_task, daemon=True).start()
         self.logger.info("平台同步线程已启动！")
-        self.sync_event.wait()  # 等待 sync_task 完成第一次任务
         threading.Thread(target=self.push_task, daemon=True).start()
         self.logger.info("流量推送线程已启动！")
 

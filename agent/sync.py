@@ -70,7 +70,7 @@ class ServerSync:
             except requests.RequestException as e:
                 return False
 
-    def push(self,  info, machine_config, global_config, total):
+    def push(self, info, machine_config, global_config, total):
         # ifname = a
         # for index, ifnames in enumerate(info):
         #     for name in ifnames[index]:
@@ -95,8 +95,6 @@ class ServerSync:
                     return True
         except requests.RequestException as e:
             return False
-        # else:
-        #     self.logger.info("没有新的流量信息需要同步")
 
     @staticmethod
     def get_time():
