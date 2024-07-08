@@ -52,16 +52,10 @@ class ServerSync:
                 'isp_id': 1,
                 'collect_ifname': ifname
             }
-            try:
-                response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
-                if response.status_code == 200:
-                    if response.json()['error'] == '':
-                        return response.json()['data']
-            except requests.RequestException as e:
-                return False
 
             # 同步
             try:
+                response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
                 response = requests.get(self.config_api, data=self.machine_id, headers=self.headers)
                 if response.status_code == 200:
                     if response.json()['error'] == '':
