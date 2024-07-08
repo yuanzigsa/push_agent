@@ -16,8 +16,6 @@ class SharedInfo:
     def __init__(self):
         self.info = []
         self.lock = threading.Lock()
-        # self.machine_id = machine_id
-        # self.machine_ip = machine_ip
         self.machine_config = None
         self.global_config = None
 
@@ -31,12 +29,18 @@ class Agent:
         self.sync_interval = sync_interval
         self.hardware_collector = Monitor()
         self.server_sync = ServerSync()
+        # 事件对象用于同步线程启动顺序
+        self.collect_event = threading.Event()
+        self.sync_event = threading.Event()
+        self.push_event = threading.Event()
 
     def start(self):
         threading.Thread(target=self.collect_task, daemon=True).start()
+        self.collect_event.wait()  # 等待 collect_task 完成第一次任务
         self.logger.info("流量采集线程已启动！")
         threading.Thread(target=self.sync_task, daemon=True).start()
         self.logger.info("平台同步线程已启动！")
+        self.sync_event.wait()  # 等待 sync_task 完成第一次任务
         threading.Thread(target=self.push_task, daemon=True).start()
         self.logger.info("流量推送线程已启动！")
 
@@ -53,6 +57,9 @@ class Agent:
                 self.logger.info(f"第【{len(self.shared_info.info)}/{total}】轮采集完成")
             else:
                 self.logger.error("第【{len(self.shared_info.info)}/{total}】轮采集失败")
+
+            if not self.collect_event.is_set():
+                self.collect_event.set()  # 第一次任务完成后设置事件
             time.sleep(self.collect_interval)
 
     def sync_task(self):
@@ -67,6 +74,8 @@ class Agent:
                         self.shared_info.machine_config = success
                 else:
                     self.logger.error("平台信息同步失败")
+            if not self.sync_event.is_set():
+                self.sync_event.set()  # 第一次任务完成后设置事件
             time.sleep(self.sync_interval)
 
     def push_task(self):
@@ -80,4 +89,6 @@ class Agent:
                     self.shared_info.info = []
                 else:
                     self.logger.error("流量信息推送失败")
+            if not self.push_event.is_set():
+                self.push_event.set()  # 第一次任务完成后设置事件
             time.sleep(self.push_interval)

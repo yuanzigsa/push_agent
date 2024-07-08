@@ -32,7 +32,6 @@ class ServerSync:
         print(f"info:{info}")
         if machine_config is None:
             machine_config = self.machine_config
-            print(machine_config)
         for machine in machine_config:
             # push
             ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
