@@ -70,7 +70,7 @@ class ServerSync:
             except requests.RequestException as e:
                 return False
 
-    def push(self,  info, machine_config, global_config, sum):
+    def push(self,  info, machine_config, global_config, total):
         # ifname = a
         # for index, ifnames in enumerate(info):
         #     for name in ifnames[index]:
@@ -80,11 +80,11 @@ class ServerSync:
         # 如何根据ip找到对应的网卡名
         # server_url = global_config['server_url']
 
-        if len(info) < sum:
+        if len(info) < total:
             self.logger.info("没有新的流量信息需要同步")
             return
-        if len(info) > sum:
-            info = info[:sum]
+        if len(info) > total:
+            info = info[:total]
 
         # 推送历史
         try:
