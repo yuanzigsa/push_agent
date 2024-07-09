@@ -80,6 +80,7 @@ install_python3_env() {
     pip3 install requests -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
     pip3 install psutil -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
     pip3 install colorlog -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
+    pip3 install schedule -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
     log_info "python所需的外置库已全部安装"
 }
 
