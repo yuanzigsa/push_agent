@@ -172,7 +172,7 @@ class ServerSync:
         if len(info) != total:
             self.logger.info("缺少数据，无法进行推送")
             self.update_history(device_name, "faild", playload, current_time['formatted_time'])
-            send_dingtalk_message(self.global_config['dingtalk_webhook'], f"缺少数据，无法进行推送")
+            send_dingtalk_message(f"{device_name}推送失败", "url")
             return False
 
         success = self.push_to_costumer(global_config, playload, headers)
