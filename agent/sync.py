@@ -35,8 +35,9 @@ class ServerSync:
         try:
             machine_config = requests.get(self.config_api, data=self.machine_id, headers=self.headers).json()['data']
             global_config = requests.get(self.global_config_api, headers=self.headers).json()['data']
-            self.logger.info(f"respon:{machine_config}")
+
             if machine_config is not None and global_config is not None:
+                self.logger.info(f"respon:{machine_config}")
                 self.machine_config = machine_config
                 self.machine_config = global_config
                 return True
