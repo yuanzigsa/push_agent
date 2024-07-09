@@ -63,7 +63,7 @@ class ServerSync:
         # 获取设备名称
         device_name = None
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
-        for info in machine_config:
+        for info in machine_config.keys():
             device_name = info
             if device_name is None:
                 return False
@@ -72,7 +72,6 @@ class ServerSync:
                 ifconfig = machine_config[device_name]
                 if ifconfig != "":
                     ifname = ifconfig['collect_ifname']
-
 
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
@@ -89,7 +88,7 @@ class ServerSync:
             # 'device_type': 3,
             # 'isp_id': 1,
             'collect_ifname': ifname,
-            'interfaces': ",".join([name for name in info]),
+            'interfaces': ",".join([str(item) if not isinstance(item, dict) else str(item) for item in info]),
             'mac': info[ifname]['mac'],
         }
         try:
