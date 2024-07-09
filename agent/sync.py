@@ -23,11 +23,11 @@ class ServerSync:
             content = f.read().strip().split(":")
         self.machine_id = content[0]
         self.machine_ip = content[1]
-        with open("info/access_token", "r", encoding="utf-8") as f:
-            content = f.read()
-            content.replace("\n", "")
-            content.replace(" ", "")
-        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': content}
+        # with open("info/access_token", "r", encoding="utf-8") as f:
+        #     content = f.read()
+        #     content.replace("\n", "")
+        #     content.replace(" ", "")
+        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': "c?JQbPWjrz^vyCn{[W(su>@y$"}
         self.machine_config = None
         self.global_config = None
         self.logger.info("从控制平台获取配置...")
