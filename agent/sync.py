@@ -118,6 +118,8 @@ class ServerSync:
         # 推送至客户
         machine_config = self.machine_config
         global_config = self.global_config
+
+        self.logger.info(f"pushhHHHHHHHHHHHHHHHH:{machine_config}")
         if machine_config["disabled"] == "no":
             pass
 
