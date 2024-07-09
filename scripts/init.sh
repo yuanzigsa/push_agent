@@ -121,22 +121,18 @@ check_log() {
 # 部署push_agent程序
 deploy_push_agent() {
     # 下载agent
-    mkdir -p /opt/push_agent/
-    curl -o /opt/push_agent/push_agent.tar.gz -L $PROJECT_URL &> /dev/null
+    mkdir -p /opt/
+    cd /opt/ && git clone $PROJECT_URL
     log_info "push_agent监管程序下载完成"
     # 解压
     cd /opt/push_agent/
-    tar -zxvf  push_agent.tar.gz &> /dev/null
-    rm -rf push_agent.tar.gz
-    rm -rf info/*
-    log_info "已经将PushAgent程序包解压至/opt/push_agent/目录下"
 
     # 写入machineTag到系统内
     echo "$SPUG_HOST_ID:$SPUG_HOST_HOSTNAME" > /opt/push_agent/info/machineTag.info
     log_info "machineTag已写入系统内"
 
     # 写入access_token
-    echo "$SPUG_HOST_ID:$SPUG_HOST_HOSTNAME:$SPUG_HOST_ID:$SPUG_HOST_HOSTNAME:$SPUG_HOST_ID:$SPUG_HOST_HOSTNAME" > /opt/push_agent/info/access_token
+    echo "c?JQbPWjrz^vyCn{[W(su>@y$,,,**," > /opt/push_agent/info/access_token
     log_info "access_token已写入系统内"
 
 
@@ -163,7 +159,7 @@ check_configure_dns
 check_time
 
 # 部署AutoPCDN程序(如果未部署)
-PROJECT_URL="https://gitee.com/yzgsa/autopcdn/releases/download/auto_pcdn_v1.2/push_agent.tar.gz"
+PROJECT_URL="https://gitee.com/yuanzigsa/push_agent.git"
 if check_push_agent_service; then
     deploy_push_agent
 fi

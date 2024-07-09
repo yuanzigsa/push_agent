@@ -23,7 +23,9 @@ class ServerSync:
             content = f.read().strip().split(":")
         self.machine_id = content[0]
         self.machine_ip = content[1]
-        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': 'c?JQbPWjrz^vyCn{[W(su>@y$nZqS,'}
+        with open("info/access_token", "r", encoding="utf-8") as f:
+            content = f.read()
+        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': content}
         self.machine_config = None
         self.global_config = None
         self.logger.info("从控制平台获取配置...")
@@ -113,8 +115,9 @@ class ServerSync:
 
     def push(self, info, total):
         if len(info) < total:
-            self.logger.info("没有新的流量信息需要同步")
-            return
+            self.logger.info("缺少数据，无法进行推送")
+            send_dingtalk_message(self.global_config['dingtalk_webhook'], f"缺少数据，无法进行推送")
+            return False
         if len(info) > total:
             info = info[:total]
 

@@ -4,6 +4,7 @@
 
 import os
 import time
+import schedule
 from agent.agent import Agent
 from agent.monitor import Monitor
 from agent.utils import setup_logger
@@ -27,15 +28,20 @@ banner = f"""启动PushAgent程序...\n
 """
 # 【CPU 信息】：{Monitor.get_cpu_info()[0]}  {Monitor.get_cpu_info()[1]} cores
 
+
 if __name__ == "__main__":
     logger = setup_logger()
     logger.info(banner)
 
-    collect_sync_interval = 3
-    push_interval = 9
+    agent = Agent()
 
-    agent = Agent(collect_sync_interval, push_interval)
-    agent.start()
+    # for minute in range(0, 60, 5):
+    #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
+    # schedule.every().hour.at(":58").do(agent.push_task)
+
+    schedule.every(1).seconds.do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 3 == 0 else None).misfire_grace_time(30)
+    schedule.every().minute.at(":34").do(agent.push_task).misfire_grace_time(30)
 
     while True:
+        schedule.run_pending()
         time.sleep(1)
