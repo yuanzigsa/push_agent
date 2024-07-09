@@ -67,8 +67,8 @@ class ServerSync:
         # 获取设备名称
         device_name = None
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
-        for info in machine_config.keys():
-            device_name = info
+        for name in machine_config.keys():
+            device_name = name
             if device_name is None:
                 return False
             else:
