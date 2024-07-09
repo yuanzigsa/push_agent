@@ -143,7 +143,8 @@ class ServerSync:
         for ifinfo in info:
             value = ifinfo[machine_config[device_name]['collect_ifname']]['sent']
             value_modify = machine_config[device_name]['value_modify']
-            numbers = re.findall(r'\d+\.?\d*', str(value_modify))
+            value_modify = str(value_modify)
+            numbers = re.findall(r'\d+\.?\d*', value_modify)
             if "+" in value_modify:
                 value = int(value) + int(numbers[0])
             elif "-" in value_modify:
