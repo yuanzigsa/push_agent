@@ -39,8 +39,8 @@ if __name__ == "__main__":
     #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
     # schedule.every().hour.at(":58").do(agent.push_task)
 
-    schedule.every(1).seconds.do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 3 == 0 else None).misfire_grace_time(30)
-    schedule.every().minute.at(":34").do(agent.push_task).misfire_grace_time(30)
+    schedule.every(1).seconds.do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 3 == 0 else None)
+    schedule.every().minute.at(":34").do(agent.push_task)
 
     while True:
         schedule.run_pending()
