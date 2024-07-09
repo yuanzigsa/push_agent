@@ -119,9 +119,12 @@ class ServerSync:
         machine_config = self.machine_config
         global_config = self.global_config
 
+        device_name = next(iter(machine_config))
+
         self.logger.info(f"pushhHHHHHHHHHHHHHHHH:{machine_config}")
-        if machine_config["disabled"] == "no":
-            pass
+        if machine_config[device_name]["disabled"] == "yes":
+            self.logger.info(f"【{device_name}】已关闭流量推送")
+            return
 
         current_time = self.get_time()
 
