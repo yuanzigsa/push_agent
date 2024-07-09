@@ -22,11 +22,10 @@ banner = f"""启动PushAgent程序...\n
 【程序版本】：v1.0   
 【更新时间】：2024/7/7
 【系统信息】：{Monitor.get_system_info()}  
-
+【CPU 信息】：{Monitor.get_cpu_info()[0]}  {Monitor.get_cpu_info()[1]} cores
 【内存总量】：{Monitor.get_total_memory_gb()}GB
 【当前路径】：{os.getcwd()}
 """
-# 【CPU 信息】：{Monitor.get_cpu_info()[0]}  {Monitor.get_cpu_info()[1]} cores
 
 
 if __name__ == "__main__":
