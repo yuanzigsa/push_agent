@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # schedule.every().hour.at(":58").do(agent.push_task)
 
     # schedule.every().minute.at(":00").do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 5 == 0 else None)
-    schedule.every(5).seconds.do(agent.collect_sync_task())
+    schedule.every(5).seconds.do(agent.collect_sync_task)
 
     schedule.every().minute.at(":59").do(agent.push_task)
 
