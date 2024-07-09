@@ -26,6 +26,7 @@ class ServerSync:
         with open("info/access_token", "r", encoding="utf-8") as f:
             content = f.read()
             content.replace("\n", "")
+            content.replace(" ", "")
         self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': content}
         self.machine_config = None
         self.global_config = None
