@@ -62,7 +62,7 @@ class Monitor:
                     if line.strip().startswith("model name"):
                         cpu_model = line.split(":")[1].strip()
                         # cpu_info = f"Model: {cpu_model}"
-                        break
+                        return cpu_model
         except FileNotFoundError:
             pass
 
