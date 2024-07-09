@@ -62,17 +62,17 @@ class ServerSync:
 
         # 获取设备名称
         device_name = None
+        ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
         for info in machine_config:
             device_name = info
             if device_name is None:
                 return False
+            else:
+                # 获取采集接口
+                ifconfig = machine_config[device_name]
+                if ifconfig != "":
+                    ifname = ifconfig['collect_ifname']
 
-        # 获取采集接口
-        ifconfig = machine_config[device_name]
-        if ifconfig != "":
-            ifname = ifconfig['collect_ifname']
-        else:
-            ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
 
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
