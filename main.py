@@ -40,7 +40,10 @@ if __name__ == "__main__":
     #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
     # schedule.every().hour.at(":58").do(agent.push_task)
 
-    schedule.every().minute.at(":00, :05, :10, :15, :20, :25, :30, :35, :40, :45, :50, :55").do(agent.collect_sync_task)
+    # 0秒和能被5整除的秒数
+    for i in range(0, 60, 5):
+        schedule.every().minute.at(f":{i:02d}").do(agent.collect_sync_task)
+
     schedule.every().minute.at(":59").do(agent.push_task)
 
     while True:
