@@ -43,7 +43,7 @@ if __name__ == "__main__":
         if second % 5 == 0:
             agent.collect_sync_task()
 
-        if second == 59:
+        if second == 56:
             agent.push_task()
 
         time.sleep(1 - (datetime.now().microsecond / 1_000_000))
