@@ -143,13 +143,13 @@ class ServerSync:
 
         # 加上本周期采集数据
         # 数据是否需要进行偏移量调整
-        data.extend([values])
+        data.extend(values)
 
         version = 1
         data.append(version)
         data.append(machine_config[device_name]['device_type'])
 
-        playload = ",".join([str(item) for item in data])
+        playload = ','.join([str(item) for item in data])
 
         self.logger.info(f"【{device_name}】推送数据：{playload}")
 

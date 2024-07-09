@@ -15,7 +15,15 @@ if __name__ == '__main__':
     #
     # print(info)
     # print(info.bytes_sent)
-    pass
+    a = [
+        222,
+        333,
+        "lijinyuan"
+    ]
+    b = [1,2,3,4,45,5]
+    print(a.extend(b))
+    a = ','.join([str(v) for v in a])
+    print(a)
 
 
 
