@@ -17,8 +17,7 @@ class ServerSync:
         self.global_config_api = "http://192.168.31.84:8000/agent/global_config/"
         self.history_api = "http://192.168.31.84:8000/agent/history/"
         with open("info/machineTag.info", "r", encoding="utf-8") as f:
-            content = f.read()
-            content = content.split(":")
+            content = f.read().strip().split(":")
         self.machine_id = content[0]
         self.machine_ip = content[1]
         self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': 'c?JQbPWjrz^vyCn{[W(su>@y$nZqS,'}
@@ -33,12 +32,14 @@ class ServerSync:
 
     def get_config(self):
         try:
-            machine_config = requests.get(self.config_api, data=self.machine_id, headers=self.headers).json()['data']
-            global_config = requests.get(self.global_config_api, headers=self.headers).json()['data']
+            machine_config_response = requests.get(self.config_api, data=self.machine_id, headers=self.headers)
+            global_config_response = requests.get(self.global_config_api, headers=self.headers)
+            machine_config = machine_config_response.json().get('data')
+            global_config = global_config_response.json().get('data')
 
             if machine_config is not None and global_config is not None:
                 self.machine_config = machine_config
-                self.machine_config = global_config
+                self.global_config = global_config
                 return True
             else:
                 return False
