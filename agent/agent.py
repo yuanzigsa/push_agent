@@ -64,9 +64,10 @@ class Agent:
                 success = self.server_sync.push(info, self.total)
                 if success:
                     self.logger.info("流量信息推送成功")
-                    # 重置采集数据变量
-                    self.shared_info.info = []
                 else:
                     if success is False:
                         self.logger.error("流量信息推送失败")
+
+                # 重置采集数据变量，防止大量溢出
+                self.shared_info.info = []
             time.sleep(self.push_interval)
