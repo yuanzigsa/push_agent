@@ -37,7 +37,6 @@ class ServerSync:
             global_config = requests.get(self.global_config_api, headers=self.headers).json()['data']
 
             if machine_config is not None and global_config is not None:
-                self.logger.info(f"respon:{machine_config}")
                 self.machine_config = machine_config
                 self.machine_config = global_config
                 return True
@@ -50,6 +49,8 @@ class ServerSync:
     def sync(self, info):
         # 从平台获取配置
         success = self.get_config()
+        self.logger.info(f"respon:{self.machine_config}")
+
         if success:
             self.logger.info("从控制平台同步成功！")
             self.logger.info(f"【本机配置】：{self.machine_config}")
