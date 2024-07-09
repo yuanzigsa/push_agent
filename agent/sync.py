@@ -6,6 +6,7 @@ import time
 import logging
 import requests
 from datetime import datetime
+from agent.utils import send_dingtalk_message
 
 
 class ServerSync:
@@ -14,7 +15,7 @@ class ServerSync:
         self.monitor = Monitor()
         self.logger = logging.getLogger()
         self.config_api = "http://192.168.31.84:8000/agent/config/"
-        self.global_config_api = "http://192.168.31.84:8000/agent/global_config/"
+        self.global_config_api = "http://192.168.31.84:8000/agent/get_global_config/"
         self.history_api = "http://192.168.31.84:8000/agent/history/"
         with open("info/machineTag.info", "r", encoding="utf-8") as f:
             content = f.read().strip().split(":")
@@ -121,31 +122,35 @@ class ServerSync:
 
         device_name = next(iter(machine_config))
 
-        self.logger.info(f"pushhHHHHHHHHHHHHHHHH:{machine_config}")
         if machine_config[device_name]["disabled"] == "yes":
             self.logger.info(f"【{device_name}】已关闭流量推送")
             return
 
         current_time = self.get_time()
 
-        # 获取mac
-        # ifname = a
-        # for index, ifnames in enumerate(info):
-        #     for name in ifnames[index]:
-        #         if name == ifname:
-        #             ifnames[index][name] = global_config['']
-
-        info = [
+        data = [
             current_time['flux_day'],
+            current_time['flux_hour'],
             global_config['provider_id'],
             global_config['provider_uiid'],
             machine_config['isp_id'],
             machine_config['mac'],
-            machine_config['provider_uiid'],
         ]
-        info.extend(["12个数据"])
-        info.append("version")
-        playload = ",".join([str(item) for item in info])
+        values = []
+        for ifinfo in info:
+            value = ifinfo[device_name]['sent']
+            values.append(value)
+
+        # 加上本周期采集数据
+        data.extend([values])
+
+        version = 1
+        data.append(version)
+        data.append(machine_config['device_type'])
+
+        playload = ",".join([str(item) for item in data])
+
+
 
         headers = {
             'access_id': global_config['access_id'],
@@ -153,20 +158,16 @@ class ServerSync:
             'X-Seq': '1',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
-        try:
-            respone = requests.request("POST", global_config['push_url'], data=playload, headers=headers)
-        except Exception as e:
-            self.logger.error(f"推送至客户出现异常：{e}")
 
-        # 推送历史
-        # mac
-        try:
-            response = requests.post(self.history_api, data=json.dumps(info), headers=self.headers)
-
-            if response.status_code == 200:
-                if response.json()['error'] == '':
-                    return True
-        except requests.RequestException as e:
+        success = self.push_to_costumer(global_config, playload, headers)
+        if success:
+            # 更新历史记录
+            self.update_history(device_name, current_time['flux_hour'])
+            return True
+        else:
+            # 更新历史记录，钉钉告警
+            self.update_history(device_name, current_time['flux_hour'])
+            send_dingtalk_message(f"{device_name}推送失败", "url")
             return False
 
     @staticmethod
@@ -182,3 +183,41 @@ class ServerSync:
             'flux_day': flux_day,
             'flux_hour': flux_hour
         }
+
+    def push_to_costumer(self, global_config, payload, headers, max_retries=3):
+        attempt = 0
+        while attempt < max_retries:
+            try:
+                response = requests.request("POST", global_config['push_url'], data=payload, headers=headers)
+                if response.status_code == 200:
+                    return True
+                else:
+                    self.logger.error(f"推送失败，状态码：{response.status_code}")
+            except Exception as e:
+                self.logger.error(f"推送至客户出现异常：{e}")
+
+            attempt += 1
+            time.sleep(10)
+            self.logger.info(f"重试推送，第 {attempt} 次")
+
+        self.logger.error("推送失败，已达到最大重试次数")
+        return False
+
+    def update_history(self, global_config, info, max_retries=3):
+        attempt = 0
+        while attempt < max_retries:
+            try:
+                response = requests.post(self.history_api, data=json.dumps(info), headers=self.headers)
+                if response.status_code == 200:
+                    return True
+                else:
+                    self.logger.error(f"推送失败，状态码：{response.status_code}")
+            except Exception as e:
+                self.logger.error(f"推送至客户出现异常：{e}")
+
+            attempt += 1
+            time.sleep(10)
+            self.logger.info(f"重试推送，第 {attempt} 次")
+        self.logger.error("推送失败，已达到最大重试次数")
+
+        return False
