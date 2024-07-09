@@ -104,6 +104,7 @@ class ServerSync:
         }
         try:
             response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
+            self.logger.info(f"【{device_name}】上报平台信息：{data}")
             if response.status_code == 200:
                 if response.json()['error'] == '':
                     return True
@@ -116,6 +117,8 @@ class ServerSync:
             return False
 
     def push(self, info, cycle_times):
+        if len(info) != cycle_times:
+            return
 
         # 推送至客户
         machine_config = self.machine_config
@@ -168,11 +171,11 @@ class ServerSync:
             'Content-Type': 'application/x-www-form-urlencoded',
         }
 
-        if len(info) != cycle_times:
-            self.logger.info("数据无效，无法进行推送")
-            self.update_history(device_name, "faild", playload, current_time['formatted_time'])
-            send_dingtalk_message(f"{device_name}推送失败", "url")
-            return False
+        # if len(info) != cycle_times:
+        #     self.logger.info("数据无效，无法进行推送")
+        #     self.update_history(device_name, "faild", playload, current_time['formatted_time'])
+        #     send_dingtalk_message(f"{device_name}推送失败", "url")
+        #     return False
 
         success = self.push_to_costumer(global_config, playload, headers)
         if success:
