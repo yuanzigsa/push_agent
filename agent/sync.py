@@ -68,7 +68,7 @@ class ServerSync:
                 return False
 
         # 获取采集接口
-        ifconfig = machine_config["device_name"]
+        ifconfig = machine_config[device_name]
         if ifconfig != "":
             ifname = ifconfig['collect_ifname']
         else:
