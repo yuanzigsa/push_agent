@@ -63,6 +63,8 @@ class ServerSync:
         # 获取设备名称
         device_name = None
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
+        self.logger.info(f"machine_config:{type(machine_config)}")
+        self.logger.info(f"machine_config:{machine_config}")
         for info in machine_config.keys():
             device_name = info
             if device_name is None:
@@ -70,7 +72,7 @@ class ServerSync:
             else:
                 # 获取采集接口
                 ifconfig = machine_config[device_name]
-                if ifconfig != "":
+                if ifconfig is not None:
                     ifname = ifconfig['collect_ifname']
 
         total_flow = info[-1][ifname]['sent']
