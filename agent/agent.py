@@ -37,7 +37,8 @@ class Agent:
         if success:
             self.logger.info("流量信息推送成功")
         else:
-            self.logger.error("流量信息推送失败,请检查！")
+            if success is False:
+                self.logger.error("流量信息推送失败,请检查！")
 
         # 重置采集数据变量，防止大量溢出
         self.collect_data = []
