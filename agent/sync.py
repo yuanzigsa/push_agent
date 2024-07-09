@@ -77,8 +77,6 @@ class ServerSync:
                 if ifconfig is not None:
                     ifname = ifconfig['collect_ifname']
 
-        self.logger.info(f"{info}====={type(info)}")
-        self.logger.info(f"{info[-1]}====={type(info[-1])}")
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
         status = "unknown"
@@ -95,7 +93,7 @@ class ServerSync:
             # 'isp_id': 1,
             'collect_ifname': ifname,
             'interfaces': ",".join([str(item) if not isinstance(item, dict) else str(item) for item in info]),
-            'mac': info[ifname]['mac'],
+            'mac': info[-1][ifname]['mac'],
         }
         try:
             response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
