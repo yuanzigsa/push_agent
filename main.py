@@ -4,10 +4,11 @@
 
 import os
 import time
-import schedule
 from agent.agent import Agent
 from agent.monitor import Monitor
 from agent.utils import setup_logger
+from datetime import datetime
+
 
 banner = f"""启动PushAgent程序...\n
  ███████                  ██          ██                                ██  
@@ -40,12 +41,22 @@ if __name__ == "__main__":
     #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
     # schedule.every().hour.at(":58").do(agent.push_task)
 
-    # 0秒和能被5整除的秒数
-    for i in range(0, 60, 5):
-        schedule.every().minute.at(f":{i:02d}").do(agent.collect_sync_task)
+    if __name__ == "__main__":
+        logger = setup_logger()
+        logger.info("Your banner message here")
 
-    schedule.every().minute.at(":59").do(agent.push_task)
+        # 每隔推送周期内采集次数
+        cycle_times = 12
+        agent = Agent(cycle_times)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+        while True:
+            now = datetime.now()
+            second = now.second
+            if second % 5 == 0:
+                agent.collect_sync_task()
+
+            if second == 59:
+                agent.push_task()
+
+            # Sleep until the next second
+            time.sleep(1 - (datetime.now().microsecond / 1_000_000))
