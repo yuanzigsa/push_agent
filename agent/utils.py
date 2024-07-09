@@ -31,7 +31,7 @@ def setup_logger():
     file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)  # 设置为DEBUG级别以捕获所有级别的日志
+    logger.setLevel(logging.INFO)  # 设置为DEBUG级别以捕获所有级别的日志
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(console_formatter)
