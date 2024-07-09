@@ -20,8 +20,6 @@ class Agent:
         self.collect_data.append(info)
         self.logger.info("========================================================")
         if info:
-            self.logger.info("流量信息采集成功")
-
             self.logger.info(f"第【{len(self.collect_data)}/{self.cycle_times}】轮采集完成")
         else:
             self.logger.error(f"第【{len(self.collect_data)}/{self.cycle_times}】轮采集失败")
