@@ -138,7 +138,7 @@ class ServerSync:
         ]
         values = []
         for ifinfo in info:
-            value = ifinfo[device_name]['sent']
+            value = ifinfo[machine_config[device_name]['collect_ifname']]['sent']
             values.append(value)
 
         # 加上本周期采集数据
