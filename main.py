@@ -37,26 +37,13 @@ if __name__ == "__main__":
     cycle_times = 12
     agent = Agent(cycle_times)
 
-    # for minute in range(0, 60, 5):
-    #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
-    # schedule.every().hour.at(":58").do(agent.push_task)
+    while True:
+        now = datetime.now()
+        second = now.second
+        if second % 5 == 0:
+            agent.collect_sync_task()
 
-    if __name__ == "__main__":
-        logger = setup_logger()
-        logger.info("Your banner message here")
+        if second == 59:
+            agent.push_task()
 
-        # 每隔推送周期内采集次数
-        cycle_times = 12
-        agent = Agent(cycle_times)
-
-        while True:
-            now = datetime.now()
-            second = now.second
-            if second % 5 == 0:
-                agent.collect_sync_task()
-
-            if second == 59:
-                agent.push_task()
-
-            # Sleep until the next second
-            time.sleep(1 - (datetime.now().microsecond / 1_000_000))
+        time.sleep(1 - (datetime.now().microsecond / 1_000_000))
