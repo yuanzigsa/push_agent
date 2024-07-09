@@ -15,7 +15,7 @@ class Monitor:
     def collect_netifio(self):
         # 获取所有网络接口
         # 定义物理网卡的前缀
-        physical_interfaces_prefixes = ('eth', 'em', 'en', 'wlan', 'wifi')
+        physical_interfaces_prefixes = ('enp', 'eth', 'em', 'en', 'wlan', 'wifi')
 
         # 获取所有网络接口
         if_addrs = psutil.net_if_addrs()
@@ -25,7 +25,7 @@ class Monitor:
 
         for ifname in if_addrs:
             # 检查接口名称是否以物理网卡前缀开头
-            # if any(ifname.startswith(prefix) for prefix in physical_interfaces_prefixes):
+            if any(ifname.startswith(prefix) for prefix in physical_interfaces_prefixes):
                 # 获取 MAC 地址和 IP 地址
                 mac_address = ''
                 ip_address = ''

@@ -72,6 +72,10 @@ install_python3_env() {
     sudo yum install -y gcc python3-devel &> /dev/null
     log_info "gcc已安装"
 
+    log_info "开始安装git..."
+    sudo yum install -y git &> /dev/null
+    log_info "gcc已安装"
+
     log_info "开始安装python所需的外置库..."
     pip3 install requests -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
     pip3 install psutil -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
