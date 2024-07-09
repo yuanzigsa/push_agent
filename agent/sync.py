@@ -79,6 +79,7 @@ class ServerSync:
                 if ifconfig is not None:
                     ifname = ifconfig['collect_ifname']
 
+        self.logger.info(f"{info[-1]}====={type(info[-1])}")
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
         status = "unknown"
