@@ -15,12 +15,12 @@ class SharedInfo:
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self, cycle_times):
         self.logger = logging.getLogger("AgentLogger")
         self.shared_info = SharedInfo()
         self.hardware_collector = Monitor()
         self.server_sync = ServerSync()
-        self.total = 12
+        self.cycle_times = 12
 
     def collect_sync_task(self):
         info = self.hardware_collector.collect_netifio()
@@ -28,9 +28,9 @@ class Agent:
             self.shared_info.info.append(info)
             if info:
                 self.logger.info("流量信息采集成功")
-                self.logger.info(f"第【{len(self.shared_info.info)}/{self.total}】轮采集完成")
+                self.logger.info(f"第【{len(self.shared_info.info)}/{self.cycle_times}】轮采集完成")
             else:
-                self.logger.error(f"第【{len(self.shared_info.info)}/{self.total}】轮采集失败")
+                self.logger.error(f"第【{len(self.shared_info.info)}/{self.cycle_times}】轮采集失败")
 
             info = self.shared_info.info
             success = self.server_sync.sync(info)
@@ -42,7 +42,7 @@ class Agent:
     def push_task(self):
         with self.shared_info.lock:
             info = self.shared_info.info
-            success = self.server_sync.push(info, self.total)
+            success = self.server_sync.push(info, self.cycle_times)
             if success:
                 self.logger.info("流量信息推送成功")
             else:

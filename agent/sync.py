@@ -115,8 +115,7 @@ class ServerSync:
             self.logger.error(f"请求出现异常：{e}")
             return False
 
-    def push(self, info, total):
-
+    def push(self, info, cycle_times):
 
         # 推送至客户
         machine_config = self.machine_config
@@ -169,8 +168,8 @@ class ServerSync:
             'Content-Type': 'application/x-www-form-urlencoded',
         }
 
-        if len(info) != total:
-            self.logger.info("缺少数据，无法进行推送")
+        if len(info) != cycle_times:
+            self.logger.info("数据无效，无法进行推送")
             self.update_history(device_name, "faild", playload, current_time['formatted_time'])
             send_dingtalk_message(f"{device_name}推送失败", "url")
             return False
@@ -233,12 +232,12 @@ class ServerSync:
                 if response.status_code == 200:
                     return True
                 else:
-                    self.logger.error(f"推送失败，状态码：{response.status_code}")
+                    self.logger.error(f"更新历史记录失败，状态码：{response.status_code}")
             except Exception as e:
-                self.logger.error(f"推送至客户出现异常：{e}")
+                self.logger.error(f"更新历史记录出现异常：{e}")
             attempt += 1
             time.sleep(10)
             self.logger.info(f"重试推送，第 {attempt} 次")
-        self.logger.error("推送失败，已达到最大重试次数")
+        self.logger.error("更新失败，已达到最大重试次数")
 
         return False

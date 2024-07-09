@@ -33,14 +33,16 @@ if __name__ == "__main__":
     logger = setup_logger()
     logger.info(banner)
 
-    agent = Agent()
+    # 每隔推送周期内采集次数
+    cycle_times = 12
+    agent = Agent(cycle_times)
 
     # for minute in range(0, 60, 5):
     #     schedule.every().hour.at(f":{minute:02d}").do(agent.collect_sync_task)
     # schedule.every().hour.at(":58").do(agent.push_task)
 
-    schedule.every(1).seconds.do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 3 == 0 else None)
-    schedule.every().minute.at(":34").do(agent.push_task)
+    schedule.every().minute.at(":00").do(lambda: agent.collect_sync_task() if int(time.strftime("%S")) % 5 == 0 else None)
+    schedule.every().minute.at(":59").do(agent.push_task)
 
     while True:
         schedule.run_pending()
