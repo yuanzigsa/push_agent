@@ -92,7 +92,7 @@ class ServerSync:
             # 'device_type': 3,
             # 'isp_id': 1,
             'collect_ifname': ifname,
-            'interfaces': ",".join([str(ifname) for item in info for ifname in item.keys]),
+            'interfaces': ",".join([str(ifname) for item in info for ifname in item.keys()]),
             'mac': info[-1][ifname]['mac'],
         }
         try:
