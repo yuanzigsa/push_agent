@@ -1,10 +1,8 @@
-info = [
-    "54548545",
-    "adhahh",
-    111
-]
+a = {
+    1:"a",
+    2:"b",
+    3:"c"
+}
 
-
-a = ",".join([str(item) for item in info])
-
-print(a)  # 输出: 54548545,adhahh,111
+for a in a:
+    print(a[1])

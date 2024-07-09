@@ -1,6 +1,8 @@
 # @Author  : yuanzi
 # @Time    : 2024/7/7 10:26
 # Copyright (c) <yuanzigsa@gmail.com>
+
+import re
 import json
 import time
 import logging
@@ -136,13 +138,19 @@ class ServerSync:
             machine_config[device_name]['isp_id'],
             machine_config[device_name]['mac'],
         ]
+        # 数据是否需要进行偏移量调整
         values = []
         for ifinfo in info:
             value = ifinfo[machine_config[device_name]['collect_ifname']]['sent']
+            value_modify = machine_config[device_name]['value_modify']
+            numbers = re.findall(r'\d+\.?\d*', value_modify)
+            if "+" in value_modify:
+                value = int(value) + int(numbers[0])
+            elif "-" in value_modify:
+                value = int(value) - int(numbers[0])
             values.append(value)
 
         # 加上本周期采集数据
-        # 数据是否需要进行偏移量调整
         data.extend(values)
 
         version = 1
@@ -163,11 +171,11 @@ class ServerSync:
         success = self.push_to_costumer(global_config, playload, headers)
         if success:
             # 更新历史记录
-            self.update_history(device_name, current_time['flux_hour'])
+            self.update_history(device_name, "success", playload, current_time['formatted_time'])
             return True
         else:
             # 更新历史记录，钉钉告警
-            self.update_history(device_name, current_time['flux_hour'])
+            self.update_history(device_name, "faild", playload, current_time['formatted_time'])
             send_dingtalk_message(f"{device_name}推送失败", "url")
             return False
 
@@ -204,7 +212,13 @@ class ServerSync:
         self.logger.error("推送失败，已达到最大重试次数")
         return False
 
-    def update_history(self, global_config, info, max_retries=3):
+    def update_history(self, device_name, status, push_info, uptime, max_retries=3):
+        info = {
+            "device_name": device_name,
+            "status": status,
+            "push_info": push_info,
+            "uptime": uptime
+        }
         attempt = 0
         while attempt < max_retries:
             try:
@@ -215,7 +229,6 @@ class ServerSync:
                     self.logger.error(f"推送失败，状态码：{response.status_code}")
             except Exception as e:
                 self.logger.error(f"推送至客户出现异常：{e}")
-
             attempt += 1
             time.sleep(10)
             self.logger.info(f"重试推送，第 {attempt} 次")
