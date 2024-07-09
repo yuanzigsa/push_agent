@@ -57,7 +57,6 @@ class ServerSync:
     def sync(self, info):
         # 从平台获取配置
         success = self.get_config()
-        self.logger.info(f"respon:{self.machine_config}")
 
         if success:
             self.logger.info("从控制平台同步成功！")
@@ -67,7 +66,7 @@ class ServerSync:
             self.logger.error("从控制平台同步失败！")
         machine_config = self.machine_config
 
-        self.logger.info(f"info:{info}")
+        self.logger.info(f"【采集数据】:{info}")
         if machine_config is None:
             return False
 
@@ -215,7 +214,7 @@ class ServerSync:
                 self.logger.error(f"推送至客户出现异常：{e}")
 
             attempt += 1
-            time.sleep(10)
+            time.sleep(1)
             self.logger.info(f"重试推送，第 {attempt} 次")
 
         self.logger.error("推送失败，已达到最大重试次数")
@@ -239,7 +238,7 @@ class ServerSync:
             except Exception as e:
                 self.logger.error(f"更新历史记录出现异常：{e}")
             attempt += 1
-            time.sleep(10)
+            time.sleep(1)
             self.logger.info(f"重试推送，第 {attempt} 次")
         self.logger.error("更新失败，已达到最大重试次数")
 
