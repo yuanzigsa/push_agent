@@ -133,8 +133,8 @@ class ServerSync:
             current_time['flux_hour'],
             global_config['provider_id'],
             global_config['provider_uiid'],
-            machine_config['isp_id'],
-            machine_config['mac'],
+            machine_config[device_name]['isp_id'],
+            machine_config[device_name]['mac'],
         ]
         values = []
         for ifinfo in info:
@@ -147,7 +147,7 @@ class ServerSync:
 
         version = 1
         data.append(version)
-        data.append(machine_config['device_type'])
+        data.append(machine_config[device_name]['device_type'])
 
         playload = ",".join([str(item) for item in data])
 
