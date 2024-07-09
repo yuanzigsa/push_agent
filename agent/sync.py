@@ -216,9 +216,7 @@ class ServerSync:
             attempt += 1
             time.sleep(1)
             self.logger.info(f"重试推送，第 {attempt} 次")
-
         self.logger.error("推送失败，已达到最大重试次数")
-        return False
 
     def update_history(self, device_name, status, push_info, uptime, max_retries=3):
         info = {
@@ -241,5 +239,4 @@ class ServerSync:
             time.sleep(1)
             self.logger.info(f"重试推送，第 {attempt} 次")
         self.logger.error("更新失败，已达到最大重试次数")
-
         return False
