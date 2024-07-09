@@ -116,12 +116,7 @@ class ServerSync:
             return False
 
     def push(self, info, total):
-        if len(info) < total:
-            self.logger.info("缺少数据，无法进行推送")
-            send_dingtalk_message(self.global_config['dingtalk_webhook'], f"缺少数据，无法进行推送")
-            return False
-        if len(info) > total:
-            info = info[:total]
+
 
         # 推送至客户
         machine_config = self.machine_config
@@ -173,6 +168,12 @@ class ServerSync:
             'X-Seq': '1',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
+
+        if len(info) != total:
+            self.logger.info("缺少数据，无法进行推送")
+            self.update_history(device_name, "faild", playload, current_time['formatted_time'])
+            send_dingtalk_message(self.global_config['dingtalk_webhook'], f"缺少数据，无法进行推送")
+            return False
 
         success = self.push_to_costumer(global_config, playload, headers)
         if success:
