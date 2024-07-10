@@ -129,7 +129,9 @@ class ServerSync:
         machine_config = self.machine_config
         global_config = self.global_config
 
-
+        if global_config is None:
+            self.logger.error("全局配置为空，无法推送数据")
+            return
 
         device_name = next(iter(machine_config))
         if machine_config[device_name]["disabled"] == "yes":
@@ -169,11 +171,6 @@ class ServerSync:
         playload = ','.join([str(item) for item in data])
 
         self.logger.info(f"【{device_name}】推送数据：{playload}")
-
-        if global_config is None:
-            self.logger.error("全局配置为空，无法推送数据")
-            self.update_history(device_name, "faild", ','.join([str(item) for item in values]), current_time['formatted_time'])
-            return
 
         headers = {
             'access_id': global_config['access_id'],
