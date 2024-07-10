@@ -17,6 +17,7 @@ class ServerSync:
         self.logger = logging.getLogger()
         self.config_api = "http://192.168.16.201:8000/agent/config/"
         self.global_config_api = "http://192.168.16.201:8000/agent/get_global_config/"
+
         self.history_api = "http://192.168.16.201:8000/agent/history/"
         with open("info/machineTag.info", "r", encoding="utf-8") as f:
             content = f.read().strip().split(":")
@@ -83,6 +84,7 @@ class ServerSync:
                 if ifconfig is not None:
                     ifname = ifconfig['collect_ifname']
 
+        self.logger.info(f"【采集接口】:{ifname} =======================")
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
         status = "unknown"
