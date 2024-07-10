@@ -74,7 +74,7 @@ class ServerSync:
         self.logger.info(f"【机器IP】:{self.machine_ip} =======================")
 
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
-        self.logger.info(f"【根据IP获得的网卡名】:{self.machine_ip} =======================")
+        self.logger.info(f"【根据IP获得的网卡名】:{ifname} =======================")
 
 
 
