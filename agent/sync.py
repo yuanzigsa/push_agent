@@ -8,7 +8,6 @@ import time
 import logging
 import requests
 from datetime import datetime
-from agent.utils import send_dingtalk_message
 
 
 class ServerSync:
@@ -64,6 +63,7 @@ class ServerSync:
             self.logger.info(f"【全局配置】：{self.global_config}")
         else:
             self.logger.error("从控制平台同步失败！")
+
         machine_config = self.machine_config
 
         self.logger.info(f"【采集数据】:{info}")
@@ -174,12 +174,6 @@ class ServerSync:
             'Content-Type': 'application/x-www-form-urlencoded',
         }
 
-        # if len(info) != cycle_times:
-        #     self.logger.info("数据无效，无法进行推送")
-        #     self.update_history(device_name, "faild", ','.join([str(item) for item in values]), current_time['formatted_time'])
-        #     send_dingtalk_message(f"{device_name}推送失败", "url")
-        #     return False
-
         success = self.push_to_costumer(global_config, playload, headers)
         if success:
             # 更新历史记录
@@ -188,7 +182,6 @@ class ServerSync:
         else:
             # 更新历史记录，钉钉告警
             self.update_history(device_name, "faild", ','.join([str(item) for item in values]), current_time['formatted_time'])
-            send_dingtalk_message(f"{device_name}推送失败", "url")
             return False
 
     @staticmethod

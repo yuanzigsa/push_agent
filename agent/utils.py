@@ -4,6 +4,8 @@
 
 import os
 import logging
+import requests
+import datetime
 from logging.handlers import TimedRotatingFileHandler
 from colorlog import ColoredFormatter
 
@@ -47,5 +49,42 @@ def setup_logger():
     return logger
 
 
-def send_dingtalk_message(message, url):
-    pass
+# def send_dingtalk_message(info, webhook_url):
+#     def send_dingtalk_request(url, data, headers):
+#         return requests.post(url, json=data, headers=headers)
+#
+#     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#     headers = {'Content-Type': 'application/json'}
+#     event_title = f'<font color="#f90202">推送Agent-告警通知</font>'
+#     texts = [
+#         f'## {event_title}',
+#         f'**告警时间：** {now_time}',
+#         f'**告警描述：** <font color="#f90202">推送Agent运行出现异常，请管理员检查日志获取详情！~</font>',
+#         f'**详细信息：** {info}',
+#     ]
+#
+#     data = {
+#         "msgtype": "markdown",
+#         "markdown": {
+#             "title": "推送Agent运行出现异常",
+#             'text': '\n\n'.join(texts)
+#         },
+#         'at': {
+#             'isAtAll': True
+#         }
+#     }
+#     try:
+#         for url in eval(webhook_url):
+#             response = send_dingtalk_request(url, data, headers)
+#             if response.status_code != 200:
+#                 logging.warning(" 钉钉消息发送失败，正在重试...")
+#                 # 重试发送钉钉消息
+#                 retry_count = 3  # 设置重试次数
+#                 for i in range(retry_count):
+#                     response = send_dingtalk_request(webhook_url, data, headers)
+#                     if response.status_code == 200:
+#                         break
+#             else:
+#                 logging.info(f"钉钉告警消息发送请求成功：{response.text}")
+#     except Exception as e:
+#         logging.error(f"发送钉钉消息出错：{e}")
