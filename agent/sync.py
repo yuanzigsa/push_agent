@@ -46,9 +46,6 @@ class ServerSync:
             machine_config = machine_config_response.json().get('data')
             global_config = global_config_response.json().get('data')
 
-            if global_config is not None:
-                self.global_config = global_config
-
             if machine_config is not None:
                 self.machine_config = machine_config
                 return True
@@ -132,12 +129,9 @@ class ServerSync:
         machine_config = self.machine_config
         global_config = self.global_config
 
-        if global_config is None:
-            self.logger.error("全局配置为空，无法推送数据")
-            return
+
 
         device_name = next(iter(machine_config))
-
         if machine_config[device_name]["disabled"] == "yes":
             self.logger.warning(f"【{device_name}】已关闭流量推送")
             return
@@ -176,13 +170,17 @@ class ServerSync:
 
         self.logger.info(f"【{device_name}】推送数据：{playload}")
 
+        if global_config is None:
+            self.logger.error("全局配置为空，无法推送数据")
+            self.update_history(device_name, "faild", ','.join([str(item) for item in values]), current_time['formatted_time'])
+            return
+
         headers = {
             'access_id': global_config['access_id'],
             'need_response': 'true',
             'X-Seq': '1',
             'Content-Type': 'application/x-www-form-urlencoded',
         }
-
         success = self.push_to_costumer(global_config, playload, headers)
         if success:
             # 更新历史记录
