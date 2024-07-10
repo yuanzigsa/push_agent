@@ -235,6 +235,7 @@ class ServerSync:
             try:
                 response = requests.post(self.history_api, data=json.dumps(info), headers=self.headers)
                 if response.status_code == 200:
+                    self.logger.info("更新历史记录成功")
                     return True
                 else:
                     self.logger.error(f"更新历史记录失败，状态码：{response.status_code}")
