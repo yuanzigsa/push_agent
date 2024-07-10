@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # a = ','.join([str(v) for v in a])
     # print(a)
     #
-    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    #
-
+    my_dict = {}
+    key = next(iter(my_dict))
+    print(key)  # 输出: key
 

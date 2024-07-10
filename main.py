@@ -38,12 +38,16 @@ if __name__ == "__main__":
     agent = Agent(cycle_times)
 
     while True:
-        now = datetime.now()
-        second = now.second
-        if second % 5 == 0:
-            agent.collect_sync_task()
+        try:
+            now = datetime.now()
+            second = now.second
 
-        if second == 56:
-            agent.push_task()
+            if second % 5 == 0:
+                agent.collect_sync_task()
 
-        time.sleep(1 - (datetime.now().microsecond / 1_000_000))
+            if second == 56:
+                agent.push_task()
+
+            time.sleep(1)
+        except Exception as e:
+            logger.error(f"PushAgent运行发生错误 at {datetime.now()}: {e}")
