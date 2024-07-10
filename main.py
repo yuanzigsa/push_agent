@@ -42,7 +42,7 @@ if __name__ == "__main__":
             now = datetime.now()
             second = now.second
 
-            if second % 5 == 0:
+            if second % 10 == 0:
                 agent.collect_sync_task()
 
             if second == 56:
