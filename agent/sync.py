@@ -46,6 +46,9 @@ class ServerSync:
             machine_config = machine_config_response.json().get('data')
             global_config = global_config_response.json().get('data')
 
+            if global_config is not None:
+                self.global_config = global_config
+
             if machine_config is not None:
                 self.machine_config = machine_config
                 return True
