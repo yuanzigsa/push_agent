@@ -223,6 +223,7 @@ class ServerSync:
         self.logger.error("推送失败，已达到最大重试次数")
 
     def update_history(self, device_name, status, push_info, uptime, max_retries=3):
+        self.logger.info(f"开始更新历史记录......")
         info = {
             "device_name": device_name,
             "status": status,
