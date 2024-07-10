@@ -77,10 +77,9 @@ install_python3_env() {
     log_info "gcc已安装"
 
     log_info "开始安装python所需的外置库..."
-    pip3 install requests -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
-    pip3 install psutil -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
-    pip3 install colorlog -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
-    pip3 install schedule -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com &> /dev/null
+    pip3 install requests -i https://pypi.tuna.tsinghua.edu.cn/simple--trusted-host pypi.tuna.tsinghua.edu.cn &> /dev/null
+    pip3 install psutil -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn &> /dev/null
+    pip3 install colorlog -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn &> /dev/null
     log_info "python所需的外置库已全部安装"
 }
 
@@ -99,7 +98,7 @@ create_systemd_service() {
 }
 check_log() {
     log_file="/opt/push_agent/log/pushAgent.log"
-    search_string="流量信息采集成功"
+    search_string="平台信息同步成功"
     timeout=600  # 设置超时时间为600秒
     elapsed_time=0
 
