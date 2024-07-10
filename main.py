@@ -34,7 +34,7 @@ if __name__ == "__main__":
     logger.info(banner)
 
     # 每隔推送周期内采集次数
-    cycle_times = 12
+    cycle_times = 6
     agent = Agent(cycle_times)
 
     while True:
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             if second % 10 == 0:
                 agent.collect_sync_task()
 
-            if second == 56:
+            if second == 51:
                 agent.push_task()
 
         except Exception as e:
