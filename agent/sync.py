@@ -15,9 +15,12 @@ class ServerSync:
         from agent.monitor import Monitor
         self.monitor = Monitor()
         self.logger = logging.getLogger()
-        self.config_api = "http://192.168.31.84:8000/agent/config/"
-        self.global_config_api = "http://192.168.31.84:8000/agent/get_global_config/"
-        self.history_api = "http://192.168.31.84:8000/agent/history/"
+        # self.config_api = "http://192.168.31.84:8000/agent/config/"
+        # self.global_config_api = "http://192.168.31.84:8000/agent/get_global_config/"
+        # self.history_api = "http://192.168.31.84:8000/agent/history/"
+        self.config_api = "http://192.168.16.201:8000/agent/config/"
+        self.global_config_api = "http://192.168.16.201:8000/agent/get_global_config/"
+        self.history_api = "http://192.168.16.201:8000/agent/history/"
         with open("info/machineTag.info", "r", encoding="utf-8") as f:
             content = f.read().strip().split(":")
         self.machine_id = content[0]
