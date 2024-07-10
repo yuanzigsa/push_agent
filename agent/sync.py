@@ -123,10 +123,14 @@ class ServerSync:
         machine_config = self.machine_config
         global_config = self.global_config
 
+        if global_config is None:
+            self.logger.error("全局配置为空，无法推送数据")
+            return
+
         device_name = next(iter(machine_config))
 
         if machine_config[device_name]["disabled"] == "yes":
-            self.logger.info(f"【{device_name}】已关闭流量推送")
+            self.logger.warning(f"【{device_name}】已关闭流量推送")
             return
 
         current_time = self.get_time()
@@ -177,21 +181,11 @@ class ServerSync:
         #     return False
 
         success = self.push_to_costumer(global_config, playload, headers)
-        self.logger.info(111111111111111111111111111)
-        self.logger.info(111111111111111111111111111)
-        self.logger.info(111111111111111111111111111)
         if success:
-            self.logger.info(2222222222222222222222222222222222)
-            self.logger.info(2222222222222222222222222222222222)
-            self.logger.info(2222222222222222222222222222222222)
             # 更新历史记录
             self.update_history(device_name, "success", playload, current_time['formatted_time'])
             return True
         else:
-            self.logger.info(3333333333333333333333333333333333)
-            self.logger.info(3333333333333333333333333333333333)
-            self.logger.info(3333333333333333333333333333333333)
-
             # 更新历史记录，钉钉告警
             self.update_history(device_name, "faild", playload, current_time['formatted_time'])
             send_dingtalk_message(f"{device_name}推送失败", "url")
@@ -225,7 +219,7 @@ class ServerSync:
 
             attempt += 1
             time.sleep(1)
-            self.logger.info(f"重试推送，第 {attempt} 次")
+            self.logger.warning(f"重试推送，第 {attempt} 次")
         self.logger.error("推送失败，已达到最大重试次数")
 
     def update_history(self, device_name, status, push_info, uptime, max_retries=3):
@@ -247,6 +241,6 @@ class ServerSync:
                 self.logger.error(f"更新历史记录出现异常：{e}")
             attempt += 1
             time.sleep(1)
-            self.logger.info(f"重试推送，第 {attempt} 次")
+            self.logger.warning(f"重试推送，第 {attempt} 次")
         self.logger.error("更新失败，已达到最大重试次数")
         return False
