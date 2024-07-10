@@ -71,10 +71,10 @@ class ServerSync:
             return False
 
         # 获取设备名称
-        self.logger.info(f"【机器IP】:{self.machine_ip} =======================")
+        self.logger.info(f"【机器IP】:{self.machine_ip}")
 
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
-        self.logger.info(f"【根据IP获得的网卡名】:{ifname} =======================")
+        self.logger.info(f"【根据IP获得的网卡名】:{ifname}")
 
 
 
@@ -84,7 +84,7 @@ class ServerSync:
         if ifconfig is not None:
 
             ifname = ifconfig['collect_ifname']
-        self.logger.info(f"【采集接口】:{ifname} =======================")
+        self.logger.info(f"【当前采集接口】:{ifname}")
 
 
         total_flow = info[-1][ifname]['sent']
