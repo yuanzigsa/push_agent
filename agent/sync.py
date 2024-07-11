@@ -18,9 +18,9 @@ class ServerSync:
         # self.config_api = "http://192.168.31.84:8000/agent/config/"
         # self.global_config_api = "http://192.168.31.84:8000/agent/get_global_config/"
         # self.history_api = "http://192.168.31.84:8000/agent/history/"
-        self.config_api = "http://192.168.16.201:8000/agent/config/"
-        self.global_config_api = "http://192.168.16.201:8000/agent/get_global_config/"
-        self.history_api = "http://192.168.16.201:8000/agent/history/"
+        self.config_api = "http://120.26.111.213:8999/agent/config/"
+        self.global_config_api = "http://120.26.111.213:8999/agent/get_global_config/"
+        self.history_api = "http://120.26.111.213:8999/agent/history/"
         with open("info/machineTag.info", "r", encoding="utf-8") as f:
             content = f.read().strip().split(":")
         self.machine_id = content[0]
