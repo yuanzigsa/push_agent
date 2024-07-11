@@ -111,7 +111,5 @@ pyton3 mange.py runcheck
 ```
 
 ![image.png|600](https://pic.yzgsa.com/i/2024/07/11/668f82c8e4b1f.png)
-# 五、开发周期
-3 至 7 天
 
 
