@@ -7,6 +7,7 @@ from agent.monitor import Monitor
 from agent.sync import ServerSync
 import logging
 
+
 class Agent:
     def __init__(self, cycle_times):
         self.logger = logging.getLogger()
