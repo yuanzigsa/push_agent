@@ -40,12 +40,12 @@ if __name__ == "__main__":
     while True:
         try:
             now = datetime.now()
-            second = now.second
+            now_min = now.minute
 
-            if second % 10 == 0:
+            if now_min % 5 == 0:
                 agent.collect_sync_task()
 
-            if second == 51:
+            if now_min == 56:
                 agent.push_task()
 
         except Exception as e:
