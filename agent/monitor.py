@@ -15,7 +15,7 @@ class Monitor:
     def collect_netifio(self):
         # 获取所有网络接口
         # 定义物理网卡的前缀
-        physical_interfaces_prefixes = ('enp', 'eth', 'em', 'en', 'wlan', 'wifi')
+        physical_interfaces_prefixes = ('enp', 'bond', 'eth', 'em', 'en', 'wlan', 'wifi')
 
         # 获取所有网络接口
         if_addrs = psutil.net_if_addrs()

@@ -81,8 +81,6 @@ class ServerSync:
         ifname = self.monitor.get_ifname_by_ip(self.machine_ip)
         self.logger.info(f"【根据IP获得的网卡名】:{ifname}")
 
-
-
         device_name = next(iter(machine_config))
         # 获取采集接口
         ifconfig = machine_config[device_name]
@@ -97,6 +95,8 @@ class ServerSync:
         status = "unknown"
         if current_time['timestamp'] - info[-1][ifname]['uptime'] <= 300:
             status = "normal"
+        else:
+            status = "abnormal"
 
         # 初始信息上报
         data = {
@@ -114,6 +114,7 @@ class ServerSync:
             response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
             self.logger.info(f"【{device_name}】上报平台信息：{data}")
             if response.status_code == 200:
+
                 if response.json()['error'] == '':
                     return True
                 else:
@@ -174,14 +175,8 @@ class ServerSync:
         playload = ','.join([str(item) for item in data])
 
         self.logger.info(f"【{device_name}】推送数据：{playload}")
+        success = self.push_to_costumer(global_config, playload)
 
-        headers = {
-            'access_id': global_config['access_id'],
-            'need_response': 'true',
-            'X-Seq': '1',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-        success = self.push_to_costumer(global_config, playload, headers)
         if success:
             # 更新历史记录
             self.update_history(device_name, "success", ','.join([str(item) for item in values]), current_time['formatted_time'])
@@ -205,12 +200,20 @@ class ServerSync:
             'flux_hour': flux_hour
         }
 
-    def push_to_costumer(self, global_config, payload, headers, max_retries=3):
+    def push_to_costumer(self, global_config, payload, max_retries=3):
+        headers = {
+            'access_id': global_config['access_id'],
+            'need_response': 'true',
+            'X-Seq': '1',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
         attempt = 0
         while attempt < max_retries:
             try:
-                response = requests.request("POST", global_config['push_url'], data=payload, headers=headers)
+                response = requests.request("POST", global_config['push_url'],headers=headers, data=payload)
                 if response.status_code == 200:
+                    self.logger.error(f"推送请求返回值：{response.headers}")
                     return True
                 else:
                     self.logger.error(f"推送失败，状态码：{response.status_code}")
