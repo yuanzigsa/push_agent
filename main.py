@@ -34,7 +34,7 @@ if __name__ == "__main__":
     logger.info(banner)
 
     # 每隔推送周期内采集次数
-    cycle_times = 6
+    cycle_times = 12
     agent = Agent(cycle_times)
 
     while True:
@@ -44,9 +44,11 @@ if __name__ == "__main__":
 
             if now_min % 5 == 0:
                 agent.collect_sync_task()
+                time.sleep(60)
 
-            if now_min == 56:
+            if now_min == 57:
                 agent.push_task()
+                time.sleep(60)
 
         except Exception as e:
             logger.error(f"PushAgent运行发生错误 at {datetime.now()}: {e}")
