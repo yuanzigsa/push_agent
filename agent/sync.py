@@ -157,12 +157,20 @@ class ServerSync:
         for ifinfo in info:
             value = ifinfo[machine_config[device_name]['collect_ifname']]['sent']
             value_modify = machine_config[device_name]['value_modify']
-            value_modify = str(value_modify)
-            numbers = re.findall(r'\d+\.?\d*', value_modify)
-            if "+" in value_modify:
-                value = int(value) + int(numbers[0])
-            elif "-" in value_modify:
-                value = int(value) - int(numbers[0])
+            value_modify_type = machine_config[device_name]['value_modify']
+            value_modify_unit = machine_config[device_name]['value_modify_unit']
+            if value_modify_type == "increase":
+                if value_modify_unit == "number":
+                    value = int(value) + int(value_modify) * 1000 * 1000
+                if value_modify_unit == "percentage":
+                    value = int(value) + int(value_modify) * int(value) / 100
+
+            if value_modify_type == "decrease":
+                if value_modify_unit == "number":
+                    value = int(value) - int(value_modify) * 1000 * 1000
+                if value_modify_unit == "percentage":
+                    value = int(value) - int(value_modify) * int(value) / 100
+
             values.append(value)
 
         # 加上本周期采集数据
