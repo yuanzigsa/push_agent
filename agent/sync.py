@@ -15,21 +15,14 @@ class ServerSync:
         from agent.monitor import Monitor
         self.monitor = Monitor()
         self.logger = logging.getLogger()
-        # self.config_api = "http://192.168.31.84:8000/agent/config/"
-        # self.global_config_api = "http://192.168.31.84:8000/agent/get_global_config/"
-        # self.history_api = "http://192.168.31.84:8000/agent/history/"
-        self.config_api = "http://120.26.111.213:8999/agent/config/"
-        self.global_config_api = "http://120.26.111.213:8999/agent/get_global_config/"
-        self.history_api = "http://120.26.111.213:8999/agent/history/"
-        with open("info/machineTag.info", "r", encoding="utf-8") as f:
-            content = f.read().strip().split(":")
-        self.machine_id = content[0]
-        self.machine_ip = content[1]
-        # with open("info/access_token", "r", encoding="utf-8") as f:
-        #     content = f.read()
-        #     content.replace("\n", "")
-        #     content.replace(" ", "")
-        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': "c?JQbPWjrz^vyCn{[W(su>@y$"}
+        with open("config.json", "r", encoding="utf-8") as f:
+            config = json.loads(f.read())
+        self.config_api = config["config_api"]
+        self.global_config_api = config["global_config_api"]
+        self.history_api = config["history_api"]
+        self.machine_id = config["machine_id"]
+        self.machine_ip = config["machine_ip"]
+        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': config["token"]}
         self.machine_config = None
         self.global_config = None
         self.logger.info("从控制平台获取配置...")
@@ -85,10 +78,8 @@ class ServerSync:
         # 获取采集接口
         ifconfig = machine_config[device_name]
         if ifconfig is not None:
-
             ifname = ifconfig['collect_ifname']
         self.logger.info(f"【当前采集接口】:{ifname}")
-
 
         total_flow = info[-1][ifname]['sent']
         current_time = self.get_time()
@@ -187,11 +178,13 @@ class ServerSync:
 
         if success:
             # 更新历史记录
-            self.update_history(device_name, "success", ','.join([str(item) for item in values]), current_time['formatted_time'])
+            self.update_history(device_name, "success", ','.join([str(item) for item in values]),
+                                current_time['formatted_time'])
             return True
         else:
             # 更新历史记录，钉钉告警
-            self.update_history(device_name, "faild", ','.join([str(item) for item in values]), current_time['formatted_time'])
+            self.update_history(device_name, "faild", ','.join([str(item) for item in values]),
+                                current_time['formatted_time'])
             return False
 
     @staticmethod
@@ -219,7 +212,7 @@ class ServerSync:
         attempt = 0
         while attempt < max_retries:
             try:
-                response = requests.request("POST", global_config['push_url'],headers=headers, data=payload)
+                response = requests.request("POST", global_config['push_url'], headers=headers, data=payload)
                 if response.status_code == 200:
                     self.logger.error(f"推送请求返回值：{response.headers}")
                     return True
