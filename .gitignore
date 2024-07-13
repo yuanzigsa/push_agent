@@ -2,4 +2,5 @@
 /log/*
 /config/*
 /scripts/init_.sh
+/scripts/init_TX.sh
 /tests/*
