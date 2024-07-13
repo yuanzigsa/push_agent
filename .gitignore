@@ -1,2 +1,5 @@
 /info/*
 /log/*
+/config/*
+/scripts/init_.sh
+/tests/*
