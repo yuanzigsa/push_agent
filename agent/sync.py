@@ -15,7 +15,7 @@ class ServerSync:
         from agent.monitor import Monitor
         self.monitor = Monitor()
         self.logger = logging.getLogger()
-        with open("config.json", "r", encoding="utf-8") as f:
+        with open("config/config.json", "r", encoding="utf-8") as f:
             config = json.loads(f.read())
         self.config_api = config["config_api"]
         self.global_config_api = config["global_config_api"]
