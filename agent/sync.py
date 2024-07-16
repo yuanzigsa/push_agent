@@ -22,7 +22,7 @@ class ServerSync:
         self.history_api = config["history_api"]
         self.machine_id = config["machine_id"]
         self.machine_ip = config["machine_ip"]
-        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': config["token"]}
+        self.headers = {'Content-Type': 'application/json', 'X-Verification-Code': config["access_token"]}
         self.machine_config = None
         self.global_config = None
         self.logger.info("从控制平台获取配置...")

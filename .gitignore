@@ -3,4 +3,5 @@
 /config/*
 /scripts/init_.sh
 /scripts/init_TX.sh
+/scripts/init_single.sh
 /tests/*
