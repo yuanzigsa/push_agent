@@ -99,7 +99,8 @@ class ServerSync:
             # 'isp_id': 1,
             'collect_ifname': ifname,
             'interfaces': ",".join([str(ifname) for ifname in info[-1].keys()]),
-            'mac': info[-1][ifname]['mac'],
+            # 'mac': info[-1][ifname]['mac'],
+            'mac': ",".join([str(mac) for ifname in info[-1].keys() for mac in info[-1][ifname]['mac']]),
         }
         try:
             response = requests.post(self.config_api, data=json.dumps(data), headers=self.headers)
