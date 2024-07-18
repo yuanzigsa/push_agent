@@ -52,5 +52,6 @@ if __name__ == "__main__":
 
         except Exception as e:
             logger.error(f"PushAgent运行发生错误 at {datetime.now()}: {e}")
+            time.sleep(1)
 
         time.sleep(1)
